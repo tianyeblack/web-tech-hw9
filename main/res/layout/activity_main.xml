@@ -52,7 +52,7 @@
             <EditText
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:id="@+id/editText2"
+                android:id="@+id/keywords"
                 android:inputType="text"
                 android:layout_weight="7"
                 android:layout_marginRight="5dp" />
@@ -77,7 +77,7 @@
             <EditText
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:id="@+id/editText3"
+                android:id="@+id/priceFrom"
                 android:inputType="text"
                 android:layout_weight="7"
                 android:layout_marginRight="5dp" />
@@ -102,7 +102,7 @@
             <EditText
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:id="@+id/editText4"
+                android:id="@+id/priceTo"
                 android:inputType="text"
                 android:layout_weight="7"
                 android:layout_marginRight="5dp" />
@@ -170,7 +170,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/Clear"
-                    android:id="@+id/button" />
+                    android:id="@+id/clrBtn" />
 
                 <Button
                     android:layout_width="wrap_content"

@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 
@@ -15,11 +18,25 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setTitle("EbaySearch");
         setContentView(R.layout.activity_main);
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        final Spinner sortBy = (Spinner) findViewById(R.id.sortBy);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.sortBy_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+        sortBy.setAdapter(adapter);
+
+        Button clrBtn = (Button) findViewById(R.id.clrBtn);
+        clrBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText keyword = (EditText) findViewById(R.id.keywords);
+                keyword.setText("");
+                EditText priceFrom = (EditText) findViewById(R.id.priceFrom);
+                priceFrom.setText("");
+                EditText priceTo = (EditText) findViewById(R.id.priceTo);
+                priceTo.setText("");
+                sortBy.setSelection(0);
+            }
+        });
     }
 
 
