@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/eBaySearchTitle"
+                android:id="@+id/textView3"
+                android:textAlignment="center"
+                android:textColor="@color/com_facebook_blue"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_gravity="center" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:text="@string/Keyword"
+                android:id="@+id/textView4"
+                android:layout_weight="3"
+                android:textSize="16sp"
+                android:gravity="left|center"
+                android:layout_marginLeft="10dp" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:id="@+id/editText2"
+                android:inputType="text"
+                android:layout_weight="7"
+                android:layout_marginRight="10dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:text="@string/Keyword"
+                android:id="@+id/textView5"
+                android:layout_weight="3"
+                android:textSize="16sp"
+                android:gravity="left|center"
+                android:layout_marginLeft="10dp" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:id="@+id/editText3"
+                android:inputType="text"
+                android:layout_weight="7"
+                android:layout_marginRight="10dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:text="@string/Keyword"
+                android:id="@+id/textView6"
+                android:layout_weight="3"
+                android:textSize="16sp"
+                android:gravity="left|center"
+                android:layout_marginLeft="10dp" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:id="@+id/editText4"
+                android:inputType="text"
+                android:layout_weight="7"
+                android:layout_marginRight="10dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:text="@string/Keyword"
+                android:id="@+id/textView7"
+                android:layout_weight="3"
+                android:textSize="16sp"
+                android:gravity="left|center"
+                android:layout_marginLeft="10dp" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:id="@+id/editText5"
+                android:inputType="text"
+                android:layout_weight="7"
+                android:layout_marginRight="10dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/beforeButton"></LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="3">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/textView8"
+                    android:text="@string/Empty" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="7">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Clear"
+                    android:id="@+id/button" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Search"
+                    android:id="@+id/button2" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"></LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
