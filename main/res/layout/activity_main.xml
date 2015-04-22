@@ -55,7 +55,9 @@
                 android:id="@+id/keywords"
                 android:inputType="text"
                 android:layout_weight="7"
-                android:layout_marginRight="5dp" />
+                android:layout_marginRight="5dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false" />
         </LinearLayout>
 
         <LinearLayout
@@ -80,7 +82,9 @@
                 android:id="@+id/priceFrom"
                 android:inputType="text"
                 android:layout_weight="7"
-                android:layout_marginRight="5dp" />
+                android:layout_marginRight="5dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false" />
         </LinearLayout>
 
         <LinearLayout
@@ -105,7 +109,9 @@
                 android:id="@+id/priceTo"
                 android:inputType="text"
                 android:layout_weight="7"
-                android:layout_marginRight="5dp" />
+                android:layout_marginRight="5dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false" />
         </LinearLayout>
 
         <LinearLayout
@@ -168,13 +174,13 @@
 
                 <Button
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="fill_parent"
                     android:text="@string/Clear"
                     android:id="@+id/clrBtn" />
 
                 <Button
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="fill_parent"
                     android:text="@string/Search"
                     android:id="@+id/srchBtn" />
             </LinearLayout>
@@ -188,10 +194,15 @@
             android:id="@+id/errArea">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
                 android:text="@string/Empty"
-                android:id="@+id/errMsg" />
+                android:id="@+id/errMsg"
+                android:layout_gravity="center"
+                android:textColor="#ffff0000"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:focusable="false" />
         </LinearLayout>
 
     </LinearLayout>

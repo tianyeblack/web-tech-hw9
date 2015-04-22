@@ -1,32 +1,73 @@
 package edu61723.usc.cs_server.hw9;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 
 
 public class MainActivity extends Activity {
 
-    private class RequestSearchTask extends AsyncTask<URL, Integer, Long> {
+    private View.OnFocusChangeListener ofcl = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (hasFocus) imm.showSoftInput(v, InputMethodManager.SHOW_IMPLICIT);
+            else imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
+    };
+
+    private class RequestSearchTask extends AsyncTask<URL, Void, Long> {
+        JSONObject response;
         @Override
         protected Long doInBackground(URL... params) {
-            return new Long(0);
+            for (URL param : params) {
+                try {
+                    URLConnection conn = param.openConnection();
+                    BufferedReader bufReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    String result = "";
+                    for (String ln; (ln = bufReader.readLine()) != null; ) result += ln;
+                    try {
+                        response = new JSONObject(result);
+                    } catch (JSONException je) {
+                        je.printStackTrace();
+                        return 1L;
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return 1L;
+                }
+            }
+            return 0L;
         }
 
         @Override
         protected void onPostExecute(Long result) {
+            if (result == 0) {
+                if (response != null) {
 
+                }
+            }
         }
     }
 
@@ -125,10 +166,10 @@ public class MainActivity extends Activity {
                         sortBy = "BestMatch";
                         break;
                 }
-                String query = "?keywords=" + keywords + "&lowrange=" + priceFrom + "&highrange=" + priceTo + "&sortby=" + sortBy;
+                String query = "/?keywords=" + keywords + "&lowrange=" + priceFrom + "&highrange=" + priceTo + "&sortby=" + sortBy + "&resultpp=5&pgNum=1";
                 URL qURL = null;
                 try {
-                    qURL = new URL("HTTP", "hw8-yetian-env.elasticbeanstalk.com", query);
+                    qURL = new URL("http", "hw8-yetian-env.elasticbeanstalk.com", query);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -137,6 +178,10 @@ public class MainActivity extends Activity {
                 }
             }
         });
+
+        findViewById(R.id.keywords).setOnFocusChangeListener(ofcl);
+        findViewById(R.id.priceFrom).setOnFocusChangeListener(ofcl);
+        findViewById(R.id.priceTo).setOnFocusChangeListener(ofcl);
     }
 
 
