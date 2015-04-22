@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -48,6 +49,7 @@ public class MainActivity extends Activity {
                 ((EditText) findViewById(R.id.priceFrom)).setText("");
                 ((EditText) findViewById(R.id.priceTo)).setText("");
                 ((Spinner) findViewById(R.id.sortBy)).setSelection(0);
+                ((TextView) findViewById(R.id.errMsg)).setText("");
             }
         });
 
@@ -55,29 +57,78 @@ public class MainActivity extends Activity {
         srchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String keyword = ((EditText) findViewById(R.id.keywords)).getText().toString();
-                Double priceFrom;
-                priceFrom = new Double(((EditText) findViewById(R.id.priceFrom)).getText().toString());
-                Double priceTo;
-                priceTo = new Double(((EditText) findViewById(R.id.priceTo)).getText().toString());
-                Integer sortBy;
+                String errMsg = "";
+                String keywords = ((EditText) findViewById(R.id.keywords)).getText().toString();
+                if (keywords.isEmpty()) {
+                    errMsg += "Please enter a keyword.\n";
+                }
+                String priceFrom = ((EditText) findViewById(R.id.priceFrom)).getText().toString();
+                String priceTo = ((EditText) findViewById(R.id.priceTo)).getText().toString();
+                if (!priceFrom.isEmpty()) {
+                    boolean pfNum = false;
+                    double pf = 0;
+                    try {
+                        pf = Double.parseDouble(priceFrom);
+                        pfNum = true;
+                        if (pf < 0) {
+                            errMsg += "Minimum price cannot be below 0.\n";
+                        }
+                    } catch (NumberFormatException nfe) {
+                        errMsg += "Price (From) should be a valid number.\n";
+                    }
+                    if (!priceTo.isEmpty()) {
+                        double pt;
+                        try {
+                            pt = Double.parseDouble(priceTo);
+                            if (pt < 0) {
+                                errMsg += "Maximum price cannot be below 0.\n";
+                            }
+                            if (pfNum && pf > pt) {
+                                errMsg += "Minimum price cannot be more than maximum price.\n";
+                            }
+                        } catch (NumberFormatException nfe) {
+                            errMsg += "Price (To) should be a valid number.\n";
+                        }
+                    }
+                } else {
+                    if (!priceTo.isEmpty()) {
+                        try {
+                            double pt = Double.parseDouble(priceTo);
+                            if (pt < 0) {
+                                errMsg += "Maximum price cannot be below 0.\n";
+                            }
+                        } catch (NumberFormatException nfe) {
+                            errMsg += "Price (To) should be a valid number.\n";
+                        }
+                    }
+                }
+                if (!errMsg.isEmpty()) {
+                    ((TextView) findViewById(R.id.errMsg)).setText(errMsg);
+                    return;
+                }
+                String sortBy;
                 switch (((Spinner) findViewById(R.id.sortBy)).getSelectedItemPosition()) {
                     case 0:
-                        sortBy = new Integer(0);
+                        sortBy = "BestMatch";
                         break;
                     case 1:
+                        sortBy = "CurrentPriceHighest";
                         break;
                     case 2:
+                        sortBy = "PricePlusShippingHighest";
                         break;
                     case 3:
+                        sortBy = "PricePlusShippingLowest";
                         break;
 
                     default:
+                        sortBy = "BestMatch";
                         break;
                 }
+                String query = "?keywords=" + keywords + "&lowrange=" + priceFrom + "&highrange=" + priceTo + "&sortby=" + sortBy;
                 URL qURL = null;
                 try {
-                    qURL = new URL("HTTP", "hw8-yetian-env.elasticbeanstalk.com", "index.php?");
+                    qURL = new URL("HTTP", "hw8-yetian-env.elasticbeanstalk.com", query);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }

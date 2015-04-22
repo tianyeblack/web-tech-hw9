@@ -184,7 +184,15 @@
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_weight="3"></LinearLayout>
+            android:layout_weight="3"
+            android:id="@+id/errArea">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Empty"
+                android:id="@+id/errMsg" />
+        </LinearLayout>
 
     </LinearLayout>
 </RelativeLayout>
