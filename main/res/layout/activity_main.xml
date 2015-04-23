@@ -56,8 +56,11 @@
                 android:inputType="text"
                 android:layout_weight="7"
                 android:layout_marginRight="5dp"
-                android:focusable="false"
-                android:focusableInTouchMode="false" />
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:editable="true"
+                android:enabled="true"
+                android:imeOptions="actionSearch" />
         </LinearLayout>
 
         <LinearLayout
@@ -83,8 +86,10 @@
                 android:inputType="text"
                 android:layout_weight="7"
                 android:layout_marginRight="5dp"
-                android:focusable="false"
-                android:focusableInTouchMode="false" />
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:editable="true"
+                android:enabled="true" />
         </LinearLayout>
 
         <LinearLayout
@@ -110,8 +115,10 @@
                 android:inputType="text"
                 android:layout_weight="7"
                 android:layout_marginRight="5dp"
-                android:focusable="false"
-                android:focusableInTouchMode="false" />
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:editable="true"
+                android:enabled="true" />
         </LinearLayout>
 
         <LinearLayout

@@ -2,11 +2,14 @@ package edu61723.usc.cs_server.hw9;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -26,18 +29,17 @@ import java.net.URLConnection;
 
 
 public class MainActivity extends Activity {
+    public static JSONObject response;
 
     private View.OnFocusChangeListener ofcl = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (hasFocus) imm.showSoftInput(v, InputMethodManager.SHOW_IMPLICIT);
-            else imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            imm.toggleSoftInputFromWindow(v.getWindowToken(), 0, 0);
         }
     };
 
     private class RequestSearchTask extends AsyncTask<URL, Void, Long> {
-        JSONObject response;
         @Override
         protected Long doInBackground(URL... params) {
             for (URL param : params) {
@@ -48,11 +50,11 @@ public class MainActivity extends Activity {
                     for (String ln; (ln = bufReader.readLine()) != null; ) result += ln;
                     try {
                         response = new JSONObject(result);
+                        break;
                     } catch (JSONException je) {
                         je.printStackTrace();
                         return 1L;
                     }
-
                 } catch (IOException e) {
                     e.printStackTrace();
                     return 1L;
@@ -63,10 +65,19 @@ public class MainActivity extends Activity {
 
         @Override
         protected void onPostExecute(Long result) {
-            if (result == 0) {
-                if (response != null) {
-
+            if (result == 0 && response != null) {
+                try {
+                    if ((response.get("ack")).equals("Success")) {
+                        Intent intent = new Intent(MainActivity.this, ResultActivity.class);
+                        startActivity(intent);
+                    } else {
+                        ((TextView) findViewById(R.id.errMsg)).setText("No results found");
+                    }
+                } catch (JSONException je) {
+                    je.printStackTrace();
                 }
+            } else {
+                ((TextView) findViewById(R.id.errMsg)).setText("No results found");
             }
         }
     }
@@ -170,11 +181,9 @@ public class MainActivity extends Activity {
                 URL qURL = null;
                 try {
                     qURL = new URL("http", "hw8-yetian-env.elasticbeanstalk.com", query);
+                    new RequestSearchTask().execute(qURL);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
-                }
-                if (qURL != null) {
-                    new RequestSearchTask().execute(qURL);
                 }
             }
         });
@@ -182,6 +191,19 @@ public class MainActivity extends Activity {
         findViewById(R.id.keywords).setOnFocusChangeListener(ofcl);
         findViewById(R.id.priceFrom).setOnFocusChangeListener(ofcl);
         findViewById(R.id.priceTo).setOnFocusChangeListener(ofcl);
+
+        ((EditText) findViewById(R.id.keywords)).setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInputFromWindow(v.getWindowToken(), 0, 0);
+                    findViewById(R.id.srchBtn).performClick();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
 
