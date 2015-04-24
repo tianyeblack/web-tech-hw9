@@ -26,10 +26,11 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 
 public class MainActivity extends Activity {
-    public static JSONObject response;
+    public static ArrayList<ResultItem> items = new ArrayList<>();
 
     private View.OnFocusChangeListener ofcl = new View.OnFocusChangeListener() {
         @Override
@@ -40,6 +41,8 @@ public class MainActivity extends Activity {
     };
 
     private class RequestSearchTask extends AsyncTask<URL, Void, Long> {
+        private JSONObject response;
+
         @Override
         protected Long doInBackground(URL... params) {
             for (URL param : params) {
@@ -48,15 +51,13 @@ public class MainActivity extends Activity {
                     BufferedReader bufReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                     String result = "";
                     for (String ln; (ln = bufReader.readLine()) != null; ) result += ln;
-                    try {
-                        response = new JSONObject(result);
-                        break;
-                    } catch (JSONException je) {
-                        je.printStackTrace();
-                        return 1L;
-                    }
+                    response = new JSONObject(result);
+                    break;
                 } catch (IOException e) {
                     e.printStackTrace();
+                    return 1L;
+                } catch (JSONException je) {
+                    je.printStackTrace();
                     return 1L;
                 }
             }
@@ -65,17 +66,16 @@ public class MainActivity extends Activity {
 
         @Override
         protected void onPostExecute(Long result) {
-            if (result == 0 && response != null) {
-                try {
-                    if ((response.get("ack")).equals("Success")) {
-                        Intent intent = new Intent(MainActivity.this, ResultActivity.class);
-                        startActivity(intent);
-                    } else {
-                        ((TextView) findViewById(R.id.errMsg)).setText("No results found");
-                    }
-                } catch (JSONException je) {
-                    je.printStackTrace();
+            if (result == 0 && response != null && ("Success").equals(response.optString("ack")) && !("0").equals(response.optString("itemCount"))) {
+                for (int i = 0; i < Integer.parseInt(response.optString("itemCount")); i++) {
+                    JSONObject itm = response.optJSONObject("item" + i);
+                    ResultItem item = new ResultItem(i, itm.optJSONObject("basicInfo"), itm.optJSONObject("sellerInfo"), itm.optJSONObject("shippingInfo"));
+                    items.add(item);
                 }
+
+                Intent intent = new Intent(MainActivity.this, ResultActivity.class);
+                intent.putExtra("keywords", ((EditText) findViewById(R.id.keywords)).getText().toString());
+                startActivity(intent);
             } else {
                 ((TextView) findViewById(R.id.errMsg)).setText("No results found");
             }
@@ -158,6 +158,10 @@ public class MainActivity extends Activity {
                     ((TextView) findViewById(R.id.errMsg)).setText(errMsg);
                     return;
                 }
+
+                /* If everything is correct, clear previous error messages. */
+                ((TextView) findViewById(R.id.errMsg)).setText("");
+
                 String sortBy;
                 switch (((Spinner) findViewById(R.id.sortBy)).getSelectedItemPosition()) {
                     case 0:
