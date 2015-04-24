@@ -3,6 +3,7 @@ package edu61723.usc.cs_server.hw9;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -40,35 +41,32 @@ public class MainActivity extends Activity {
         }
     };
 
-    private class RequestSearchTask extends AsyncTask<URL, Void, Long> {
-        private JSONObject response;
+    private class RequestSearchTask extends AsyncTask<URL, Void, JSONObject> {
 
         @Override
-        protected Long doInBackground(URL... params) {
+        protected JSONObject doInBackground(URL... params) {
+            JSONObject response = null;
             for (URL param : params) {
                 try {
-                    URLConnection conn = param.openConnection();
-                    BufferedReader bufReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    BufferedReader bufReader = new BufferedReader(new InputStreamReader(param.openStream()));
                     String result = "";
                     for (String ln; (ln = bufReader.readLine()) != null; ) result += ln;
                     response = new JSONObject(result);
                     break;
                 } catch (IOException e) {
                     e.printStackTrace();
-                    return 1L;
                 } catch (JSONException je) {
                     je.printStackTrace();
-                    return 1L;
                 }
             }
-            return 0L;
+            return response;
         }
 
         @Override
-        protected void onPostExecute(Long result) {
-            if (result == 0 && response != null && ("Success").equals(response.optString("ack")) && !("0").equals(response.optString("itemCount"))) {
-                for (int i = 0; i < Integer.parseInt(response.optString("itemCount")); i++) {
-                    JSONObject itm = response.optJSONObject("item" + i);
+        protected void onPostExecute(JSONObject result) {
+            if (result != null && ("Success").equals(result.optString("ack")) && !("0").equals(result.optString("itemCount"))) {
+                for (int i = 0; i < Integer.parseInt(result.optString("itemCount")); i++) {
+                    JSONObject itm = result.optJSONObject("item" + i);
                     ResultItem item = new ResultItem(i, itm.optJSONObject("basicInfo"), itm.optJSONObject("sellerInfo"), itm.optJSONObject("shippingInfo"));
                     items.add(item);
                 }
