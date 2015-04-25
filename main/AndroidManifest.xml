@@ -31,6 +31,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu61723.usc.cs_server.hw9.MainActivity" />
         </activity>
+        <activity
+            android:name=".DetailActivity"
+            android:label="@string/title_activity_detail"
+            android:parentActivityName=".ResultActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu61723.usc.cs_server.hw9.ResultActivity" />
+        </activity>
     </application>
 
 </manifest>

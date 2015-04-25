@@ -3,12 +3,9 @@ package edu61723.usc.cs_server.hw9;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -26,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 
 
@@ -53,10 +49,8 @@ public class MainActivity extends Activity {
                     for (String ln; (ln = bufReader.readLine()) != null; ) result += ln;
                     response = new JSONObject(result);
                     break;
-                } catch (IOException e) {
+                } catch (IOException | JSONException e) {
                     e.printStackTrace();
-                } catch (JSONException je) {
-                    je.printStackTrace();
                 }
             }
             return response;
@@ -180,9 +174,8 @@ public class MainActivity extends Activity {
                         break;
                 }
                 String query = "/?keywords=" + keywords + "&lowrange=" + priceFrom + "&highrange=" + priceTo + "&sortby=" + sortBy + "&resultpp=5&pgNum=1";
-                URL qURL = null;
                 try {
-                    qURL = new URL("http", "hw8-yetian-env.elasticbeanstalk.com", query);
+                    URL qURL = new URL("http", "hw8-yetian-env.elasticbeanstalk.com", query);
                     new RequestSearchTask().execute(qURL);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
@@ -209,25 +202,25 @@ public class MainActivity extends Activity {
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 }
