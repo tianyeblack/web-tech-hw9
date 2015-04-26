@@ -2,12 +2,22 @@ package edu61723.usc.cs_server.hw9;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.share.Sharer;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -20,22 +30,57 @@ public class DetailActivity extends Activity {
     private LinearLayout basicInfo;
     private LinearLayout sellerInfo;
     private LinearLayout shipInfo;
+    private ShareDialog shareDialog;
+    private CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        shareDialog = new ShareDialog(this);
+        callbackManager = CallbackManager.Factory.create();
 
         Intent intent = getIntent();
         item = MainActivity.items.get(intent.getIntExtra("itemID", 0));
         new LoadInfoTask().execute(item);
     }
 
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private class ShareOnClickListener implements View.OnClickListener {
+        private final String price;
+        private ResultItem item;
+
+        public ShareOnClickListener(ResultItem item, String price) {
+            this.item = item;
+            this.price = price;
+        }
+        @Override
+        public void onClick(View v) {
+            if (ShareDialog.canShow(ShareLinkContent.class)) {
+                ShareLinkContent content = new ShareLinkContent.Builder()
+                        .setContentTitle(item.basicInfo.get("title"))
+                        .setImageUrl(Uri.parse(item.basicInfo.get("galleryURL")))
+                        .setContentUrl(Uri.parse(item.basicInfo.get("viewItemURL")))
+                        .setContentDescription(price + ", Location: " + item.basicInfo.get("location"))
+                        .build();
+
+                shareDialog.show(content, ShareDialog.Mode.FEED);
+            }
+        }
+
+    }
+
     private class LoadInfoTask extends AsyncTask<ResultItem, Void, Void> {
 
         @Override
         protected Void doInBackground(ResultItem... params) {
-            ResultItem item = params[0];
+            final ResultItem item = params[0];
             basicInfo = ((LinearLayout) findViewById(R.id.basicInfo));
             sellerInfo = ((LinearLayout) findViewById(R.id.sellerInfo));
             shipInfo = ((LinearLayout) findViewById(R.id.shipInfo));
@@ -57,6 +102,7 @@ public class DetailActivity extends Activity {
             ((TextView) findViewById(R.id.pricePlusShip)).setText(p);
             ((TextView) findViewById(R.id.locFrom)).setText(item.basicInfo.get("location"));
             findViewById(R.id.buyItNow).setOnClickListener(new BrowseItemOnClickListener(item.basicInfo.get("viewItemURL"), DetailActivity.this));
+            findViewById(R.id.fbShareIcon).setOnClickListener(new ShareOnClickListener(item, p));
 
             ((TextView) findViewById(R.id.cateName)).setText(item.basicInfo.get("categoryName"));
             ((TextView) findViewById(R.id.cond)).setText(item.basicInfo.get("conditionDisplayName"));
@@ -109,6 +155,24 @@ public class DetailActivity extends Activity {
                     basicInfo.setLayoutParams(lp0);
                     sellerInfo.setLayoutParams(lp0);
                     shipInfo.setLayoutParams(lp1);
+                }
+            });
+
+            shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
+                @Override
+                public void onSuccess(Sharer.Result result) {
+                    if (result.getPostId() == null || "".equals(result.getPostId())) Toast.makeText(DetailActivity.this, "Facebook Post cancelled", Toast.LENGTH_LONG).show();
+                    else Toast.makeText(DetailActivity.this, result.getPostId(), Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onCancel() {
+                    Toast.makeText(DetailActivity.this, "Facebook Post cancelled", Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onError(FacebookException error) {
+                    Toast.makeText(DetailActivity.this, "Facebook Post Error", Toast.LENGTH_LONG).show();
                 }
             });
             return null;

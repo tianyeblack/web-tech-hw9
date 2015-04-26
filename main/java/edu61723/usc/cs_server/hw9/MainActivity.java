@@ -44,6 +44,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setTitle("EbaySearch");
         setContentView(R.layout.activity_main);
+
         Spinner sortBy = (Spinner) findViewById(R.id.sortBy);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.sortBy_array, android.R.layout.simple_spinner_item);
