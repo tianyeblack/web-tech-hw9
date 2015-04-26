@@ -1,30 +1,34 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
-    android:layout_height="fill_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/results"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="edu61723.usc.cs_server.hw9.ResultActivity"
-    android:id="@+id/results">
+    tools:context="edu61723.usc.cs_server.hw9.ResultActivity">
 
-    <TextView android:text="@string/Empty" android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+    <TextView
         android:id="@+id/resultTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/Empty"
         android:textSize="24sp"
         android:textStyle="bold" />
 
     <ListView
+        android:id="@+id/resultList"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:id="@+id/resultList"
-        android:layout_below="@+id/resultTitle"
-        android:layout_alignParentStart="true"
-        tools:listitem="@android:layout/simple_list_item_2"
-        android:layout_alignParentEnd="true"
         android:layout_alignEnd="@id/results"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/resultTitle"
+        android:divider="#c0606060"
         android:dividerHeight="2px"
-        android:headerDividersEnabled="true"
         android:footerDividersEnabled="false"
-        android:divider="#c0606060" />
+        android:headerDividersEnabled="true"
+        tools:listitem="@android:layout/simple_list_item_2" />
 
 </RelativeLayout>

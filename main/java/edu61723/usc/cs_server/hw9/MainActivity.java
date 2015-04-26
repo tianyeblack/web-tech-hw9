@@ -21,8 +21,10 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 
@@ -36,43 +38,6 @@ public class MainActivity extends Activity {
             imm.toggleSoftInputFromWindow(v.getWindowToken(), 0, 0);
         }
     };
-
-    private class RequestSearchTask extends AsyncTask<URL, Void, JSONObject> {
-
-        @Override
-        protected JSONObject doInBackground(URL... params) {
-            JSONObject response = null;
-            for (URL param : params) {
-                try {
-                    BufferedReader bufReader = new BufferedReader(new InputStreamReader(param.openStream()));
-                    String result = "";
-                    for (String ln; (ln = bufReader.readLine()) != null; ) result += ln;
-                    response = new JSONObject(result);
-                    break;
-                } catch (IOException | JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            return response;
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            if (result != null && ("Success").equals(result.optString("ack")) && !("0").equals(result.optString("itemCount"))) {
-                for (int i = 0; i < Integer.parseInt(result.optString("itemCount")); i++) {
-                    JSONObject itm = result.optJSONObject("item" + i);
-                    ResultItem item = new ResultItem(i, itm.optJSONObject("basicInfo"), itm.optJSONObject("sellerInfo"), itm.optJSONObject("shippingInfo"));
-                    items.add(item);
-                }
-
-                Intent intent = new Intent(MainActivity.this, ResultActivity.class);
-                intent.putExtra("keywords", ((EditText) findViewById(R.id.keywords)).getText().toString());
-                startActivity(intent);
-            } else {
-                ((TextView) findViewById(R.id.errMsg)).setText("No results found");
-            }
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,7 +138,12 @@ public class MainActivity extends Activity {
                         sortBy = "BestMatch";
                         break;
                 }
-                String query = "/?keywords=" + keywords + "&lowrange=" + priceFrom + "&highrange=" + priceTo + "&sortby=" + sortBy + "&resultpp=5&pgNum=1";
+                String query = null;
+                try {
+                    query = "/?keywords=" + URLEncoder.encode(keywords, "UTF-8") + "&lowrange=" + priceFrom + "&highrange=" + priceTo + "&sortby=" + sortBy + "&resultpp=5&pgNum=1";
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
                 try {
                     URL qURL = new URL("http", "hw8-yetian-env.elasticbeanstalk.com", query);
                     new RequestSearchTask().execute(qURL);
@@ -199,6 +169,41 @@ public class MainActivity extends Activity {
                 return false;
             }
         });
+    }
+
+    private class RequestSearchTask extends AsyncTask<URL, Void, JSONObject> {
+
+        @Override
+        protected JSONObject doInBackground(URL... params) {
+            JSONObject response = null;
+            try {
+                BufferedReader bufReader = new BufferedReader(new InputStreamReader(params[0].openStream()));
+                String result = "";
+                for (String ln; (ln = bufReader.readLine()) != null; ) result += ln;
+                response = new JSONObject(result);
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject result) {
+            if (result != null && ("Success").equals(result.optString("ack")) && !("0").equals(result.optString("itemCount"))) {
+                items.clear();
+                for (int i = 0; i < Integer.parseInt(result.optString("itemCount")); i++) {
+                    JSONObject itm = result.optJSONObject("item" + i);
+                    ResultItem item = new ResultItem(i, itm.optJSONObject("basicInfo"), itm.optJSONObject("sellerInfo"), itm.optJSONObject("shippingInfo"));
+                    items.add(item);
+                }
+
+                Intent intent = new Intent(MainActivity.this, ResultActivity.class);
+                intent.putExtra("keywords", ((EditText) findViewById(R.id.keywords)).getText().toString());
+                startActivity(intent);
+            } else {
+                ((TextView) findViewById(R.id.errMsg)).setText("No results found");
+            }
+        }
     }
 
 

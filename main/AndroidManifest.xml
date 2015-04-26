@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="edu61723.usc.cs_server.hw9" >
+    package="edu61723.usc.cs_server.hw9">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -13,10 +13,10 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main" >
+            android:label="@string/title_activity_main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,7 +26,7 @@
         <activity
             android:name=".ResultActivity"
             android:label="@string/title_activity_result"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu61723.usc.cs_server.hw9.MainActivity" />
@@ -34,7 +34,7 @@
         <activity
             android:name=".DetailActivity"
             android:label="@string/title_activity_detail"
-            android:parentActivityName=".ResultActivity" >
+            android:parentActivityName=".ResultActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu61723.usc.cs_server.hw9.ResultActivity" />

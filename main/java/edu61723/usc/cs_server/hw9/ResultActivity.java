@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -21,12 +20,42 @@ public class ResultActivity extends Activity {
     ListView resultList;
     TextView resultTitle;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_result);
+
+        Intent intent = getIntent();
+        ArrayList<ResultItem> items = MainActivity.items;
+
+        resultTitle = (TextView) findViewById(R.id.resultTitle);
+        resultTitle.setText("Results for \'" + intent.getStringExtra("keywords") + "\'");
+
+        resultList = (ListView) findViewById(R.id.resultList);
+        resultList.setAdapter(new ItemAdapter(this, items));
+    }
+
+    private class TitleOnClickListener implements View.OnClickListener {
+        int position;
+
+        public TitleOnClickListener(int position) {
+            this.position = position;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(ResultActivity.this, DetailActivity.class);
+            intent.putExtra("itemID", position);
+            startActivity(intent);
+        }
+    }
+
     private class ItemAdapter extends BaseAdapter {
+        private final int height;
         private ArrayList<ResultItem> items;
         private Activity context;
-        private final int height;
 
-        public ItemAdapter (Activity _context, ArrayList<ResultItem> _items) {
+        public ItemAdapter(Activity _context, ArrayList<ResultItem> _items) {
             context = _context;
             items = _items;
             height = 200;
@@ -56,7 +85,9 @@ public class ResultActivity extends Activity {
 
             ResultItem item = items.get(position);
             ImageView img = (ImageView) convertView.findViewById(R.id.img);
+            img.setOnClickListener(new BrowseItemOnClickListener(item.basicInfo.get("viewItemURL"), ResultActivity.this));
             TextView itemTitle = (TextView) convertView.findViewById(R.id.itmTitle);
+            itemTitle.setOnClickListener(new TitleOnClickListener(position));
             TextView price = (TextView) convertView.findViewById(R.id.price);
 
             itemTitle.setText(item.basicInfo.get("title"));
@@ -75,28 +106,5 @@ public class ResultActivity extends Activity {
             }
             return convertView;
         }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_result);
-
-        Intent intent = getIntent();
-        ArrayList<ResultItem> items = MainActivity.items;
-
-        resultTitle = (TextView) findViewById(R.id.resultTitle);
-        resultTitle.setText("Results for \'" + intent.getStringExtra("keywords") + "\'");
-
-        resultList = (ListView) findViewById(R.id.resultList);
-        resultList.setAdapter(new ItemAdapter(this, items));
-        resultList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent newIntent = new Intent(ResultActivity.this, DetailActivity.class);
-                newIntent.putExtra("itemID", position);
-                startActivity(newIntent);
-            }
-        });
     }
 }
