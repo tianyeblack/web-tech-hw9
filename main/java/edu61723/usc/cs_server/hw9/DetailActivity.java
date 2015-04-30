@@ -2,10 +2,12 @@ package edu61723.usc.cs_server.hw9;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -77,6 +79,8 @@ public class DetailActivity extends Activity {
     }
 
     private class LoadInfoTask extends AsyncTask<ResultItem, Void, Void> {
+        final Drawable normalBtn = getDrawable(R.drawable.normalbtn);
+        final Drawable highlightBtn = getDrawable(R.drawable.highlightbtn);
 
         @Override
         protected Void doInBackground(ResultItem... params) {
@@ -133,25 +137,38 @@ public class DetailActivity extends Activity {
                 ((ImageView) findViewById(R.id.retAcpt)).setImageResource(R.mipmap.checkmark1_32);
             else ((ImageView) findViewById(R.id.retAcpt)).setImageResource(R.mipmap.cancel_32);
 
-            findViewById(R.id.basicInfoBtn).setOnClickListener(new View.OnClickListener() {
+            final Button bInfoBtn = (Button) findViewById(R.id.basicInfoBtn);
+            bInfoBtn.setBackground(highlightBtn);
+            final Button seInfoBtn = (Button) findViewById(R.id.sellerInfoBtn);
+            final Button shInfoBtn = (Button) findViewById(R.id.shipInfoBtn);
+            bInfoBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    bInfoBtn.setBackground(highlightBtn);
+                    seInfoBtn.setBackground(normalBtn);
+                    shInfoBtn.setBackground(normalBtn);
                     basicInfo.setLayoutParams(lp1);
                     sellerInfo.setLayoutParams(lp0);
                     shipInfo.setLayoutParams(lp0);
                 }
             });
-            findViewById(R.id.sellerInfoBtn).setOnClickListener(new View.OnClickListener() {
+            seInfoBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    bInfoBtn.setBackground(normalBtn);
+                    seInfoBtn.setBackground(highlightBtn);
+                    shInfoBtn.setBackground(normalBtn);
                     basicInfo.setLayoutParams(lp0);
                     sellerInfo.setLayoutParams(lp1);
                     shipInfo.setLayoutParams(lp0);
                 }
             });
-            findViewById(R.id.shipInfoBtn).setOnClickListener(new View.OnClickListener() {
+            shInfoBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    bInfoBtn.setBackground(normalBtn);
+                    seInfoBtn.setBackground(normalBtn);
+                    shInfoBtn.setBackground(highlightBtn);
                     basicInfo.setLayoutParams(lp0);
                     sellerInfo.setLayoutParams(lp0);
                     shipInfo.setLayoutParams(lp1);

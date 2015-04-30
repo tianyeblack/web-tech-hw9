@@ -58,7 +58,7 @@ public class ResultActivity extends Activity {
         public ItemAdapter(Activity _context, ArrayList<ResultItem> _items) {
             context = _context;
             items = _items;
-            height = 200;
+            height = 256;
         }
 
         @Override
